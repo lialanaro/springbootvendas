@@ -14,54 +14,51 @@ import java.util.List;
 
 @Repository
 public class ClienteRepository {
-    private static  String SELECT_POR_NOME = "select * from cliente where nome like ?";
-    private static String  INSERT = "insert into cliente (nome) values (?)";
-    private static String  SELECT_ALL = "select * from cliente";
-    private static String  UPDATE   = "update cliente set nome = ? where id = ?";
+    private static String INSERT = "insert into cliente (nome) values (?) ";
+    private static String SELECT_ALL = "SELECT * FROM CLIENTE ";
+    private static String UPDATE = "update cliente set nome = ? where id = ? ";
+    private static String DELETE = "delete from cliente where id = ? ";
 
-    private static String  DELETE = "delete from cliente where id = ?";
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-   @Autowired
-     private JdbcTemplate jdbcTemplate;
-
-   @Autowired
-   private EntityManager entityManager;
-
-    public Cliente salvar (Cliente cliente ){
-        entityManager.persist(cliente);
-        return cliente;
-    }
-    @Transactional
-    public Cliente atualizar (Cliente cliente){
-        entityManager.merge(cliente);
+    public Cliente salvar(Cliente cliente){
+        jdbcTemplate.update( INSERT, new Object[]{cliente.getNome()} );
         return cliente;
     }
 
-    @Transactional
+    public Cliente atualizar(Cliente cliente){
+        jdbcTemplate.update(UPDATE, new Object[]{
+                cliente.getNome(), cliente.getId()} );
+        return cliente;
+    }
+
     public void deletar(Cliente cliente){
-       entityManager.remove(cliente);
-
+        deletar(cliente.getId());
     }
 
     public void deletar(Integer id){
-        Cliente cliente = entityManager.find(Cliente.class, id);
-        deletar(cliente);
-
+        jdbcTemplate.update(DELETE, new Object[]{id});
     }
 
     public List<Cliente> buscarPorNome(String nome){
-         return jdbcTemplate.query(SELECT_POR_NOME,new Object[]{"%" + nome + "%"},obterClientes());
+        return jdbcTemplate.query(
+                SELECT_ALL.concat(" where nome like ? "),
+                new Object[]{"%" + nome + "%"},
+                obterClienteMapper());
     }
 
-    public List<Cliente> obterTodos() {
-        return jdbcTemplate.query(SELECT_ALL, obterClientes());
+    public List<Cliente> obterTodos(){
+        return jdbcTemplate.query(SELECT_ALL, obterClienteMapper());
     }
 
-    private static RowMapper<Cliente> obterClientes() {
+    private RowMapper<Cliente> obterClienteMapper() {
         return new RowMapper<Cliente>() {
             @Override
             public Cliente mapRow(ResultSet resultSet, int i) throws SQLException {
-                return new Cliente(resultSet.getInt("id"), resultSet.getString("nome"));
+                Integer id = resultSet.getInt("id");
+                String nome = resultSet.getString("nome");
+                return new Cliente(id, nome);
             }
         };
     }
