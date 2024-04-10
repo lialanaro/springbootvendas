@@ -44,6 +44,7 @@ public class VendasApplication {
             if(todosClientes.isEmpty()){
                 System.out.println("Nenhum cliente encontrado.");
             }else{
+
                 todosClientes.forEach(System.out::println);
             }
         };
