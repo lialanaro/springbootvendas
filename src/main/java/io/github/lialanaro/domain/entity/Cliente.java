@@ -17,7 +17,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private Integer id;
-
+    //mor pq vc nao me ama
     @Column(name="nome", length=100)
     private String nome;
 }
