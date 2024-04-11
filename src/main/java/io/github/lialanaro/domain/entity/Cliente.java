@@ -1,13 +1,10 @@
 package io.github.lialanaro.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -19,6 +16,8 @@ public class Cliente {
     @Column
     private Integer id;
 
+    @NonNull
     @Column(name="nome", length=100)
     private String nome;
+
 }
