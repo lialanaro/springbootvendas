@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,21 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private Integer id;
-    //mor pq vc nao me ama
+
     @Column(name="nome", length=100)
     private String nome;
+
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    private Set<Pedido> pedidos;
+
+    public Cliente(String nome) {
+        this.nome = nome;
+    }
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
 }
