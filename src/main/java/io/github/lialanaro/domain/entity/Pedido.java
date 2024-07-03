@@ -1,5 +1,6 @@
 package io.github.lialanaro.domain.entity;
 
+import io.github.lialanaro.domain.entity.enums.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,10 @@ public class Pedido {
 
     @Column(name="total", scale = 2,precision = 20)
     private BigDecimal total;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusPedido status;
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens;
