@@ -22,7 +22,7 @@ public class JwtService {
     private String chaveAssinatura;
 
     public String gerarToken( Usuario usuario ){
-        long expString = Long.valueOf(expiracao);
+        long expString = Long.parseLong(expiracao);
         LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
         Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
         Date data = Date.from(instant);
